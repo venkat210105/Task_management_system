@@ -1,0 +1,74 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { forgotPassword } from '../api/auth';
+
+export default function ForgotPassword() {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    setLoading(true);
+    try {
+      const res = await forgotPassword(email);
+      setMessage(res.message);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2 text-center">
+          Forgot password
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center">
+          Enter your email and we&apos;ll send you a reset link.
+        </p>
+        {error && (
+          <div className="mb-4 text-sm text-red-700 bg-red-50 dark:bg-red-900/30 dark:text-red-300 rounded-md px-3 py-2">
+            {error}
+          </div>
+        )}
+        {message && (
+          <div className="mb-4 text-sm text-green-700 bg-green-50 dark:bg-green-900/30 dark:text-green-300 rounded-md px-3 py-2">
+            {message}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-medium rounded-md py-2 text-sm transition"
+          >
+            {loading ? 'Sending…' : 'Send reset link'}
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
+          <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-medium">
+            Back to log in
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { loginUser, registerUser } from '../api/auth';
+import { loginUser, registerUser, resetPassword as resetPasswordRequest } from '../api/auth';
 
 const AuthContext = createContext(null);
 
@@ -29,6 +29,12 @@ export function AuthProvider({ children }) {
     return data;
   }, []);
 
+  const resetPassword = useCallback(async (token, password) => {
+    const data = await resetPasswordRequest(token, password);
+    persist(data);
+    return data;
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -37,7 +43,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider
+      value={{ user, token, login, register, resetPassword, logout, isAuthenticated: !!token }}
+    >
       {children}
     </AuthContext.Provider>
   );

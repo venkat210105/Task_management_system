@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -27,6 +28,14 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
   },
   { timestamps: true }
 );
@@ -40,6 +49,14 @@ userSchema.pre('save', async function hashPassword(next) {
 
 userSchema.methods.comparePassword = function comparePassword(candidate) {
   return bcrypt.compare(candidate, this.password);
+};
+
+// Generates a random reset token, stores only its hash, and returns the raw token to email to the user
+userSchema.methods.createPasswordResetToken = function createPasswordResetToken() {
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  this.resetPasswordToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+  this.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 minutes
+  return rawToken;
 };
 
 module.exports = mongoose.model('User', userSchema);

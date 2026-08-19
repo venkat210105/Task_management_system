@@ -23,7 +23,7 @@ Task_management_system/
 ```bash
 cd backend
 npm install
-cp .env.example .env   # then fill in MONGO_URI and JWT_SECRET
+cp .env.example .env   # then fill in MONGO_URI, JWT_SECRET, and EMAIL_USER/EMAIL_PASS (Gmail App Password, for forgot-password emails)
 npm run dev             # starts on http://localhost:5000
 ```
 
@@ -43,6 +43,8 @@ npm run dev              # starts on http://localhost:5173
 | POST | `/register` | Create a new account | No |
 | POST | `/login` | Log in, returns JWT | No |
 | GET | `/me` | Get current user | Yes |
+| POST | `/forgot-password` | Send a password reset link to the given email | No |
+| POST | `/reset-password/:token` | Set a new password using the token from the reset email | No |
 
 ### Tasks (`/api/tasks`) — all require `Authorization: Bearer <token>`
 | Method | Endpoint | Description |
@@ -63,6 +65,7 @@ npm run dev              # starts on http://localhost:5173
 - **Priority sorting** uses an in-memory rank map (`High > Medium > Low`) since MongoDB has no native ordering for arbitrary enum strings.
 - **Global error middleware** (`errorHandler.js`) normalizes Mongoose cast/validation/duplicate-key errors into consistent JSON error responses; all controllers use an `asyncHandler` wrapper so thrown errors are forwarded automatically instead of needing try/catch everywhere.
 - **Pagination** capped at 100 items/page server-side to prevent abuse via `limit`.
+- **Password reset** uses a random token, stored server-side only as a SHA-256 hash with a 30-minute expiry (mirrors how sessions typically store hashed secrets, so a DB leak alone can't be used to reset accounts). The forgot-password endpoint always returns the same generic message whether or not the email exists, to avoid leaking which emails are registered. Reset emails are sent via Gmail SMTP (nodemailer).
 
 ## License
 

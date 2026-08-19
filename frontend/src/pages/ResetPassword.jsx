@@ -1,25 +1,35 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function Login() {
-  const { login } = useAuth();
+export default function ResetPassword() {
+  const { token } = useParams();
+  const { resetPassword } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(form.email, form.password);
+      await resetPassword(token, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || 'Reset link is invalid or has expired');
     } finally {
       setLoading(false);
     }
@@ -29,7 +39,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6 text-center">
-          Log in
+          Reset password
         </h1>
         {error && (
           <div className="mb-4 text-sm text-red-700 bg-red-50 dark:bg-red-900/30 dark:text-red-300 rounded-md px-3 py-2">
@@ -39,35 +49,27 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email
+              New password
             </label>
             <input
-              type="email"
-              name="email"
+              type="password"
               required
-              value={form.email}
-              onChange={handleChange}
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
-              </label>
-              <Link
-                to="/forgot-password"
-                className="text-xs text-indigo-600 dark:text-indigo-400 font-medium"
-              >
-                Forgot password?
-              </Link>
-            </div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Confirm new password
+            </label>
             <input
               type="password"
-              name="password"
               required
-              value={form.password}
-              onChange={handleChange}
+              minLength={6}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -76,13 +78,12 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-medium rounded-md py-2 text-sm transition"
           >
-            {loading ? 'Logging in…' : 'Log in'}
+            {loading ? 'Resetting…' : 'Reset password'}
           </button>
         </form>
         <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-          Don&apos;t have an account?{' '}
-          <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 font-medium">
-            Sign up
+          <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-medium">
+            Back to log in
           </Link>
         </p>
       </div>

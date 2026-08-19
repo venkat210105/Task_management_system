@@ -36,7 +36,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 px-4">
       <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6 text-center">
           Reset password

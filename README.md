@@ -57,6 +57,13 @@ npm run dev              # starts on http://localhost:5173
 | DELETE | `/:id` | Delete a task |
 | GET | `/analytics/summary` | Total / completed / pending counts + completion percentage |
 
+### Admin (`/api/admin`) — all require `Authorization: Bearer <token>` **and** an `admin` role
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/stats` | System-wide totals: users, tasks, completed, pending |
+| GET | `/users` | List every user with their task count |
+| GET | `/tasks` | List every user's tasks (paginated), with owner name/email populated |
+
 ## Design Decisions
 
 - **JWT auth**, stateless, stored client-side; `protect` middleware verifies the token and attaches `req.user` on every task route.
@@ -67,6 +74,7 @@ npm run dev              # starts on http://localhost:5173
 - **Pagination** capped at 100 items/page server-side to prevent abuse via `limit`.
 - **Analytics charts**: status breakdown uses a horizontal stacked bar (not a pie/donut) since it reads proportions more precisely at a glance; priority uses a single-hue amber ramp (light→dark = Low→High) since priority is an ordered scale, not arbitrary categories. Both are hand-built SVG/HTML (no charting library) with hover tooltips, a legend, and direct value labels so identity never depends on color alone.
 - **Password reset** uses a random token, stored server-side only as a SHA-256 hash with a 30-minute expiry (mirrors how sessions typically store hashed secrets, so a DB leak alone can't be used to reset accounts). The forgot-password endpoint always returns the same generic message whether or not the email exists, to avoid leaking which emails are registered. Reset emails are sent via Gmail SMTP (nodemailer).
+- **Role-based access**: `User.role` (`user` | `admin`) is never settable from the client — `register` always creates `role: 'user'`, so promotion to admin only happens directly in the database. Admin routes are enforced server-side via a `restrictTo('admin')` middleware (403 for non-admins), not just hidden in the UI; the frontend's `AdminRoute` wrapper is a UX convenience on top of that, not the actual security boundary.
 
 ## License
 

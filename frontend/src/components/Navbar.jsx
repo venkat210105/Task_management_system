@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -6,6 +6,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { dark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -35,6 +36,14 @@ export default function Navbar() {
           </h1>
         </div>
         <div className="flex items-center gap-3">
+          {user?.role === 'admin' && (
+            <Link
+              to={location.pathname === '/admin' ? '/dashboard' : '/admin'}
+              className="rounded-md px-3 py-2 text-sm font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition"
+            >
+              {location.pathname === '/admin' ? 'My Tasks' : 'Admin'}
+            </Link>
+          )}
           <span className="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">
             {user?.name}
           </span>

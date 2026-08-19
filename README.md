@@ -65,6 +65,7 @@ npm run dev              # starts on http://localhost:5173
 - **Priority sorting** uses an in-memory rank map (`High > Medium > Low`) since MongoDB has no native ordering for arbitrary enum strings.
 - **Global error middleware** (`errorHandler.js`) normalizes Mongoose cast/validation/duplicate-key errors into consistent JSON error responses; all controllers use an `asyncHandler` wrapper so thrown errors are forwarded automatically instead of needing try/catch everywhere.
 - **Pagination** capped at 100 items/page server-side to prevent abuse via `limit`.
+- **Analytics charts**: status breakdown uses a horizontal stacked bar (not a pie/donut) since it reads proportions more precisely at a glance; priority uses a single-hue amber ramp (light→dark = Low→High) since priority is an ordered scale, not arbitrary categories. Both are hand-built SVG/HTML (no charting library) with hover tooltips, a legend, and direct value labels so identity never depends on color alone.
 - **Password reset** uses a random token, stored server-side only as a SHA-256 hash with a 30-minute expiry (mirrors how sessions typically store hashed secrets, so a DB leak alone can't be used to reset accounts). The forgot-password endpoint always returns the same generic message whether or not the email exists, to avoid leaking which emails are registered. Reset emails are sent via Gmail SMTP (nodemailer).
 
 ## License

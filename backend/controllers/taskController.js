@@ -155,14 +155,25 @@ const deleteTask = asyncHandler(async (req, res) => {
 const getAnalytics = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  const results = await Task.aggregate([
-    { $match: { user: userId } },
-    { $group: { _id: '$status', count: { $sum: 1 } } },
+  const [statusResults, priorityResults] = await Promise.all([
+    Task.aggregate([
+      { $match: { user: userId } },
+      { $group: { _id: '$status', count: { $sum: 1 } } },
+    ]),
+    Task.aggregate([
+      { $match: { user: userId } },
+      { $group: { _id: '$priority', count: { $sum: 1 } } },
+    ]),
   ]);
 
   const byStatus = { Todo: 0, 'In Progress': 0, Done: 0 };
-  results.forEach((r) => {
+  statusResults.forEach((r) => {
     byStatus[r._id] = r.count;
+  });
+
+  const byPriority = { Low: 0, Medium: 0, High: 0 };
+  priorityResults.forEach((r) => {
+    byPriority[r._id] = r.count;
   });
 
   const total = byStatus.Todo + byStatus['In Progress'] + byStatus.Done;
@@ -178,6 +189,7 @@ const getAnalytics = asyncHandler(async (req, res) => {
       pending,
       completionPercentage,
       byStatus,
+      byPriority,
     },
   });
 });

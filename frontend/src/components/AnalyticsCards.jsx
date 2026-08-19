@@ -11,7 +11,7 @@ export default function AnalyticsCards({ analytics, loading }) {
       {CARDS.map((card) => (
         <div
           key={card.key}
-          className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-center"
+          className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 text-center"
         >
           <div className={`text-2xl font-bold ${card.color}`}>
             {loading ? '—' : `${analytics?.[card.key] ?? 0}${card.suffix || ''}`}

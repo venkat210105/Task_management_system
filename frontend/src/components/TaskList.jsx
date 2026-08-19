@@ -43,12 +43,12 @@ export default function TaskList({ tasks, loading, error, onEdit, onDelete, onCo
 
       {/* Table layout for sm+ screens */}
       <div
-        className="hidden sm:block overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+        className="hidden sm:block overflow-x-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg"
         data-testid="task-table"
       >
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-gray-200 dark:border-gray-700 text-xs uppercase text-gray-500 dark:text-gray-400">
+            <tr className="border-b border-gray-200 dark:border-gray-800 text-xs uppercase text-gray-500 dark:text-gray-400">
               <th className="py-2.5 px-4 font-medium">Title</th>
               <th className="py-2.5 px-4 font-medium">Status</th>
               <th className="py-2.5 px-4 font-medium">Priority</th>

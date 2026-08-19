@@ -1,11 +1,11 @@
 const STATUS_STYLES = {
-  Todo: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
+  Todo: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
   'In Progress': 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
   Done: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
 };
 
 const PRIORITY_STYLES = {
-  Low: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+  Low: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
   Medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
   High: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
 };
@@ -17,7 +17,7 @@ function formatDate(d) {
 
 export default function TaskCard({ task, onEdit, onDelete, onComplete }) {
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="font-medium text-gray-900 dark:text-gray-100 truncate">{task.title}</div>
@@ -39,7 +39,7 @@ export default function TaskCard({ task, onEdit, onDelete, onComplete }) {
         <span className="text-xs text-gray-500 dark:text-gray-400">Due {formatDate(task.dueDate)}</span>
       </div>
 
-      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
         {task.status !== 'Done' && (
           <button
             onClick={() => onComplete(task)}

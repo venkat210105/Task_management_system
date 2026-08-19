@@ -6,7 +6,7 @@ export default function Pagination({ page, totalPages, onChange }) {
       <button
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
-        className="rounded-md px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        className="rounded-md px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
       >
         Prev
       </button>
@@ -16,7 +16,7 @@ export default function Pagination({ page, totalPages, onChange }) {
       <button
         onClick={() => onChange(page + 1)}
         disabled={page >= totalPages}
-        className="rounded-md px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        className="rounded-md px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
       >
         Next
       </button>

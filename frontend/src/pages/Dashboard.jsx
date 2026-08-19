@@ -104,7 +104,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-6">
         <AnalyticsCards analytics={analytics} loading={analyticsLoading} />

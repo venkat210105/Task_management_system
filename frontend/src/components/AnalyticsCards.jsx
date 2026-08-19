@@ -1,8 +1,8 @@
 const CARDS = [
-  { key: 'total', label: 'Total Tasks', color: 'text-indigo-600 dark:text-indigo-400' },
+  { key: 'total', label: 'Total Tasks', color: 'text-gray-900 dark:text-gray-100' },
   { key: 'completed', label: 'Completed', color: 'text-green-600 dark:text-green-400' },
   { key: 'pending', label: 'Pending', color: 'text-amber-600 dark:text-amber-400' },
-  { key: 'completionPercentage', label: 'Completion %', color: 'text-purple-600 dark:text-purple-400', suffix: '%' },
+  { key: 'completionPercentage', label: 'Completion %', color: 'text-gray-900 dark:text-gray-100', suffix: '%' },
 ];
 
 export default function AnalyticsCards({ analytics, loading }) {

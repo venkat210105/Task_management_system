@@ -15,9 +15,14 @@ export default function Navbar() {
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Task Tracker
-        </h1>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-amber-500 text-gray-900 font-bold text-sm">
+            T
+          </span>
+          <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+            Task Tracker
+          </h1>
+        </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">
             {user?.name}
@@ -31,7 +36,7 @@ export default function Navbar() {
           </button>
           <button
             onClick={handleLogout}
-            className="rounded-md px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition"
+            className="rounded-md px-4 py-2 text-sm font-semibold bg-gray-900 text-white hover:bg-black dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white transition"
           >
             Log out
           </button>

@@ -50,7 +50,7 @@ export default function TaskCard({ task, onEdit, onDelete, onComplete }) {
         )}
         <button
           onClick={() => onEdit(task)}
-          className="text-xs font-medium text-indigo-600 dark:text-indigo-400"
+          className="text-xs font-medium text-amber-600 dark:text-amber-400"
         >
           Edit
         </button>

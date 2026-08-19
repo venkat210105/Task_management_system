@@ -16,8 +16,19 @@ export default function Navbar() {
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-amber-500 text-gray-900 font-bold text-sm">
-            T
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-amber-500 text-gray-900">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <path d="M5 13l4.5 4.5L19 7" />
+            </svg>
           </span>
           <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100 tracking-tight">
             Task Tracker

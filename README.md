@@ -4,6 +4,8 @@ A full-stack Task Tracker web app with authentication, task CRUD, filtering/sear
 
 **Stack:** React (frontend) · Node.js + Express (backend) · MongoDB (database) · JWT auth
 
+**Live:** [frontend-five-dusky-49.vercel.app](https://frontend-five-dusky-49.vercel.app) · API: [backend-eight-pi-njbsk4ld74.vercel.app/api](https://backend-eight-pi-njbsk4ld74.vercel.app/api)
+
 ## Project Structure
 
 ```

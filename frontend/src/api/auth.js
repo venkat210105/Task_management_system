@@ -4,6 +4,9 @@ export const registerUser = (payload) => api.post('/auth/register', payload).the
 
 export const loginUser = (payload) => api.post('/auth/login', payload).then((r) => r.data);
 
+export const googleAuth = (credential) =>
+  api.post('/auth/google', { credential }).then((r) => r.data);
+
 export const fetchMe = () => api.get('/auth/me').then((r) => r.data);
 
 export const forgotPassword = (email) =>

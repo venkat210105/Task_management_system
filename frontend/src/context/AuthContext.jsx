@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { loginUser, registerUser, resetPassword as resetPasswordRequest } from '../api/auth';
+import {
+  loginUser,
+  registerUser,
+  googleAuth,
+  resetPassword as resetPasswordRequest,
+} from '../api/auth';
 
 const AuthContext = createContext(null);
 
@@ -29,6 +34,12 @@ export function AuthProvider({ children }) {
     return data;
   }, []);
 
+  const loginWithGoogle = useCallback(async (credential) => {
+    const data = await googleAuth(credential);
+    persist(data);
+    return data;
+  }, []);
+
   const resetPassword = useCallback(async (token, password) => {
     const data = await resetPasswordRequest(token, password);
     persist(data);
@@ -44,7 +55,16 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login, register, resetPassword, logout, isAuthenticated: !!token }}
+      value={{
+        user,
+        token,
+        login,
+        register,
+        loginWithGoogle,
+        resetPassword,
+        logout,
+        isAuthenticated: !!token,
+      }}
     >
       {children}
     </AuthContext.Provider>

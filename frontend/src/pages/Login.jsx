@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+
+const GOOGLE_ENABLED = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
+  const { dark } = useTheme();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -22,6 +27,16 @@ export default function Login() {
       setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError('');
+    try {
+      await loginWithGoogle(credentialResponse.credential);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google sign-in failed');
     }
   };
 
@@ -79,6 +94,27 @@ export default function Login() {
             {loading ? 'Logging in…' : 'Log in'}
           </button>
         </form>
+
+        {GOOGLE_ENABLED && (
+          <>
+            <div className="flex items-center gap-3 my-5">
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+              <span className="text-xs text-gray-400 dark:text-gray-500">OR</span>
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+            </div>
+
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError('Google sign-in failed')}
+                theme={dark ? 'filled_black' : 'outline'}
+                shape="pill"
+                width="280"
+              />
+            </div>
+          </>
+        )}
+
         <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
           Don&apos;t have an account?{' '}
           <Link to="/signup" className="text-amber-600 dark:text-amber-400 font-medium">

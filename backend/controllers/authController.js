@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const User = require('../models/User');
 const sendEmail = require('../utils/sendEmail');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -48,8 +51,54 @@ const login = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
-  if (!user || !(await user.comparePassword(password))) {
+  if (!user) {
     throw new ApiError(401, 'Invalid email or password');
+  }
+  if (user.authProvider === 'google' && !user.password) {
+    throw new ApiError(400, 'This account uses Google Sign-In. Please continue with Google instead.');
+  }
+  if (!(await user.comparePassword(password))) {
+    throw new ApiError(401, 'Invalid email or password');
+  }
+
+  const token = signToken(user._id);
+  res.json({ success: true, token, user: sanitizeUser(user) });
+});
+
+// POST /api/auth/google
+const googleLogin = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+  if (!credential) throw new ApiError(400, 'Google credential is required');
+
+  let payload;
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    payload = ticket.getPayload();
+  } catch (err) {
+    throw new ApiError(401, 'Invalid Google credential');
+  }
+
+  if (!payload?.email_verified) {
+    throw new ApiError(401, 'Google account email is not verified');
+  }
+
+  const email = payload.email.toLowerCase();
+  let user = await User.findOne({ $or: [{ googleId: payload.sub }, { email }] }).select('+googleId');
+
+  if (!user) {
+    user = await User.create({
+      name: payload.name || email.split('@')[0],
+      email,
+      googleId: payload.sub,
+      authProvider: 'google',
+    });
+  } else if (!user.googleId) {
+    // Existing local account with the same verified email — link it
+    user.googleId = payload.sub;
+    await user.save({ validateBeforeSave: false });
   }
 
   const token = signToken(user._id);
@@ -130,4 +179,4 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.json({ success: true, token, user: sanitizeUser(user) });
 });
 
-module.exports = { register, login, getMe, forgotPassword, resetPassword };
+module.exports = { register, login, googleLogin, getMe, forgotPassword, resetPassword };
